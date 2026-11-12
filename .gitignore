@@ -1,21 +1,40 @@
-# Python-generated files
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[oc]
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
 build/
 dist/
 wheels/
-*.egg-info
+*.egg-info/
+.installed.cfg
+*.egg
 
 # Virtual environments
-.venv
 .venv/
+venv/
+ENV/
+env/
 
-# Secrets
+# Environment variables & secrets
 .env
+.env.*
+!.env.example
 
-# IntelliJ / PyCharm
+# IDEs & Editors
 .idea/
 *.iml
+.vscode/
+*.sublime-project
+*.sublime-workspace
 
-# macOS
+# Build & Compiler output
+out/
+
+# macOS metadata
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes

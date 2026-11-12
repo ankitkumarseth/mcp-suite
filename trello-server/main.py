@@ -80,6 +80,43 @@ async def get_checklists(card_id: str) -> str:
             return "\n".join([f"Checklist: {cl['name']} (ID: {cl['id']})" for cl in checklists]) if checklists else "No checklists found."
         return f"Error: {resp.text}"
 
+@mcp.tool()
+async def get_card_details(card_id: str) -> str:
+    """Get detailed information about a specific card including description, due date, and URL."""
+    check_auth()
+    url = f"https://api.trello.com/1/cards/{card_id}"
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url, params=get_auth_params())
+        if resp.status_code == 200:
+            card = resp.json()
+            return f"Name: {card.get('name')}\nDesc: {card.get('desc')}\nDue: {card.get('due')}\nURL: {card.get('url')}"
+        return f"Error: {resp.text}"
+
+@mcp.tool()
+async def get_comments(card_id: str) -> str:
+    """Get all comments on a specific card."""
+    check_auth()
+    url = f"https://api.trello.com/1/cards/{card_id}/actions"
+    params = {**get_auth_params(), 'filter': 'commentCard'}
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url, params=params)
+        if resp.status_code == 200:
+            actions = resp.json()
+            return "\n".join([f"Comment by {a.get('memberCreator', {}).get('fullName')}: {a.get('data', {}).get('text')}" for a in actions]) if actions else "No comments found."
+        return f"Error: {resp.text}"
+
+@mcp.tool()
+async def get_attachments(card_id: str) -> str:
+    """Get all attachments on a specific card."""
+    check_auth()
+    url = f"https://api.trello.com/1/cards/{card_id}/attachments"
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url, params=get_auth_params())
+        if resp.status_code == 200:
+            attachments = resp.json()
+            return "\n".join([f"Attachment: {att.get('name')} (URL: {att.get('url')})" for att in attachments]) if attachments else "No attachments found."
+        return f"Error: {resp.text}"
+
 
 # --- WRITE TOOLS ---
 
